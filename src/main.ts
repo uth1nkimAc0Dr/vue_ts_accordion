@@ -1,9 +1,11 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import store from "../store";
 import PrimeAccordion from "primevue/accordion";
 import PrimeAccordionTab from "primevue/accordiontab";
 import "primeicons/primeicons.css";
 const app = createApp(App);
 app.component("PrimeAccordion", PrimeAccordion);
 app.component("PrimeAccordionTab", PrimeAccordionTab);
+app.use(store);
 app.mount("#app");

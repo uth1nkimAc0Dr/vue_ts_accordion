@@ -1,32 +1,36 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import AccordionUsers from "@/components/AccordionUsers.vue";
 import type { User, TabHeader } from "@/types/index";
-
+import { useStore } from "vuex";
 export default defineComponent({
   components: {
     AccordionUsers,
   },
 
   setup() {
+    const store = useStore();
     const tabHeader = ref<TabHeader>({
       expandedIcon: "pi pi-chevron-circle-down",
       collapsedIcon: "pi pi-chevron-circle-up",
     });
 
-    const users = ref<User[]>([]);
+    const users = computed(() => store.state.users);
 
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        users.value = (await response.json()) as User[];
-      } catch (error) {
-        console.error("Failed to fecth user:", error);
-      }
-    };
-    onMounted(fetchUserData);
+    onMounted(() => {
+      store.dispatch("fetchUsers");
+    });
+    // const fetchUserData = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       "https://jsonplaceholder.typicode.com/users"
+    //     );
+    //     users.value = (await response.json()) as User[];
+    //   } catch (error) {
+    //     console.error("Failed to fecth user:", error);
+    //   }
+    // };
+    // onMounted(fetchUserData);
 
     return { tabHeader, users };
   },
