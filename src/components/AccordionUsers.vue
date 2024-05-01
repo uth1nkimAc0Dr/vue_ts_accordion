@@ -6,25 +6,46 @@ const props = defineProps({
   tabHeader: Object,
   users: Array as () => User[],
 });
+
 const { tabHeader, users } = toRefs(props);
 const updatedUsersData = ref<User[]>([]);
 
 const dataChanges = (id: number, key: keyof User, newValue: string) => {
+  const trimmedValue = newValue.trim();
+  // console.log("newValue is ", newValue ))
+  // console.log("trimmedValue is", trimmedValue);
   const userIndex = updatedUsersData.value.findIndex((user) => user.id === id);
   if (userIndex !== -1) {
-    updatedUsersData.value[userIndex][key] = newValue;
-    console.log(`Updated user ${id}: ${key} set to ${newValue}`);
+    // пользователь в массиве updatedUsersData уже есть
+    if (updatedUsersData.value[userIndex][key] !== trimmedValue) {
+      updatedUsersData.value[userIndex][key] = trimmedValue;
+    }
+    // updatedUsersData.value[userIndex][key] = newValue.trim();
+    // updatedUsersData.value[userIndex][key] = newValue;
+    // console.log(`Updated user ${id}: ${key} set to ${newValue}`);
   } else {
-    // если пользователя нет в массиве, то добавляем его
-    const newUserData: Partial<User> = { id, [key]: newValue };
-    updatedUsersData.value.push(newUserData as User);
-    console.log(
-      `Added new user data for user ${id}: ${key} set to ${newValue}`
-    );
+    if (users && users.value) {
+      const existingUser = users.value.find((user) => user.id === id);
+      const currentValue = existingUser ? existingUser[key] : null;
+      // надо сделать проверку, чтобы старые данные не были равны новым данным
+
+      if (currentValue !== trimmedValue) {
+        // если пользователя Нет в массиве, то добавляем его
+        const newUserData: Partial<User> = { id, [key]: trimmedValue };
+        updatedUsersData.value.push(newUserData as User);
+      }
+      console.log(
+        `Added new user data for user ${id}: ${key} set to ${newValue}`
+      );
+    }
   }
 };
 const showUpdates = (id: number) => {
   const user = updatedUsersData.value.find((user) => user.id === id);
+  if (updatedUsersData.value.length === 0) {
+    alert("Данные пользователей не изменены");
+    return;
+  }
   if (!user) {
     alert("У этого пользователя данные не изменились");
     return;
@@ -33,17 +54,9 @@ const showUpdates = (id: number) => {
     .filter(([key, value]) => key !== "id" && value !== undefined)
     .map(([key, value]) => `${key}: ${value}`)
     .join("\n");
-  if (!changes) {
-    alert(`Для пользователя с ID ${id} не зафиксированы изменения. `);
-  } else {
-    alert(`Изменены данные у пользователя № ${id}:\n ${changes}`);
+  if (changes) {
+    alert(`Измененные данные пользователя № ${id}:\n${changes}`);
   }
-  // for (const key in user) {
-  //   if (key !== "id" && user[key]) {
-  //     changes += `${key}: ${user[key]}\n`;
-  //   }
-  // }
-  // alert(`Изменены данные у пользователя № ${id}:\n${changes} `);
 };
 </script>
 
