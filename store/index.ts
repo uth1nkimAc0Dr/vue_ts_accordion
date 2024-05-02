@@ -1,6 +1,5 @@
 import { User } from "@/types";
 import { createStore } from "vuex";
-// import { storeKey } from "vuex/types/index.js";
 
 interface State {
   users: User[];

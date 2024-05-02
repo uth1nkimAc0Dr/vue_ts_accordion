@@ -20,8 +20,8 @@ export type User = {
     catchPhrase: string;
     bs: string;
   };
-  [key: string]: any; //индексная подпись
-};
+  // [key: string]: string | number | boolean; //индексная подпись
+} & Record<string, unknown>;
 
 export type TabHeader = {
   expandedIcon: string;

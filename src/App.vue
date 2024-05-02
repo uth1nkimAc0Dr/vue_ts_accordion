@@ -20,17 +20,6 @@ export default defineComponent({
     onMounted(() => {
       store.dispatch("fetchUsers");
     });
-    // const fetchUserData = async () => {
-    //   try {
-    //     const response = await fetch(
-    //       "https://jsonplaceholder.typicode.com/users"
-    //     );
-    //     users.value = (await response.json()) as User[];
-    //   } catch (error) {
-    //     console.error("Failed to fecth user:", error);
-    //   }
-    // };
-    // onMounted(fetchUserData);
 
     return { tabHeader, users };
   },
@@ -39,7 +28,7 @@ export default defineComponent({
 
 <template>
   <div class="container">
-    <header class="header">
+    <header class="container__header">
       <div class="user">User</div>
     </header>
     <div class="content">
@@ -47,11 +36,12 @@ export default defineComponent({
         <div
           v-for="key in ['Name', 'Email', 'Phone', 'Website']"
           :key="key"
-          class="content-type content-split first-row"
+          class="content-type content-split header-row"
         >
           {{ key }}
         </div>
       </div>
+      <!-- заголовки аккордеона динамически создаются для каждого и меняются -->
       <AccordionUsers :tabHeader="tabHeader" :users="users"> </AccordionUsers>
     </div>
   </div>
@@ -65,13 +55,12 @@ body {
   margin: auto;
   max-width: 1752px;
   padding-bottom: 12px;
-  border: 4px solid black;
-}
-.header {
-  width: 100%;
-  margin-top: 24px;
-  margin-bottom: 32px;
-  border-bottom: 1px solid black;
+  &__header {
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid black;
+  }
 }
 .user {
   margin-bottom: 32px;
@@ -91,26 +80,24 @@ body {
       font-size: 12px;
       font-weight: 400;
     }
+    // Стилизация заголовков
+    .header-row {
+      font-size: 12px;
+      &:nth-child(1) {
+        // padding-left: 56px;
+        padding-left: 3.4482%;
+      }
+    }
   }
   margin-left: 60px;
   margin-right: 64px;
-  .first-row {
-    font-size: 12px;
-    &:nth-child(1) {
-      // padding-left: 56px;
-      padding-left: 3.4482%;
-    }
-  }
-  .second-row {
+
+  // Стилизация заголовковых динамически прилетающих данных для каждого пользователя
+  .content-row {
     font-size: 14px;
   }
   .content-split {
     width: 400px;
-    // font-size: 14px;
   }
 }
 </style>
-// &:nth-child(1) { // padding-left: 40px; // // width: 16.748%; // width: 22%;
-// } // // 16.748+18.942+22.044+19.95 // &:nth-child(2) { // // padding-left:
-40px; // // width: 18.942%; // width: 24%; // } // &:nth-child(3) { // width:
-28%; // } // &:nth-child(4) { // width: 26%; // }

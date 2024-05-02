@@ -6,37 +6,28 @@ const props = defineProps({
   tabHeader: Object,
   users: Array as () => User[],
 });
-
 const { tabHeader, users } = toRefs(props);
 const updatedUsersData = ref<User[]>([]);
 
 const dataChanges = (id: number, key: keyof User, newValue: string) => {
   const trimmedValue = newValue.trim();
-  // console.log("newValue is ", newValue ))
-  // console.log("trimmedValue is", trimmedValue);
+  //remove unused border and finalize vuex integration
   const userIndex = updatedUsersData.value.findIndex((user) => user.id === id);
   if (userIndex !== -1) {
     // пользователь в массиве updatedUsersData уже есть
     if (updatedUsersData.value[userIndex][key] !== trimmedValue) {
       updatedUsersData.value[userIndex][key] = trimmedValue;
     }
-    // updatedUsersData.value[userIndex][key] = newValue.trim();
-    // updatedUsersData.value[userIndex][key] = newValue;
-    // console.log(`Updated user ${id}: ${key} set to ${newValue}`);
   } else {
     if (users && users.value) {
       const existingUser = users.value.find((user) => user.id === id);
       const currentValue = existingUser ? existingUser[key] : null;
       // надо сделать проверку, чтобы старые данные не были равны новым данным
-
       if (currentValue !== trimmedValue) {
         // если пользователя Нет в массиве, то добавляем его
         const newUserData: Partial<User> = { id, [key]: trimmedValue };
         updatedUsersData.value.push(newUserData as User);
       }
-      console.log(
-        `Added new user data for user ${id}: ${key} set to ${newValue}`
-      );
     }
   }
 };
@@ -68,7 +59,7 @@ const showUpdates = (id: number) => {
         :collapsed-icon="tabHeader?.collapsedIcon"
         v-for="user in users"
         :key="user.id"
-        class="second-row"
+        class="content-row"
       >
         <template v-slot:header>
           <div
